@@ -13,6 +13,14 @@ if(NOT EXISTS ${CMAKE_BINARY_DIR}/execution.bs)
     file(DOWNLOAD "https://raw.githubusercontent.com/brycelelbach/wg21_p2300_execution/main/execution.bs"
         ${CMAKE_BINARY_DIR}/execution.bs)
 endif()
+
+file(READ ${CMAKE_BINARY_DIR}/execution.bs execution_content)
+if (NOT ${execution_content})
+    file(READ "cfg/execution.bs" full_content)
+    file(WRITE ${CMAKE_BINARY_DIR}/execution.bs ${full_content})
+    message(WARNING "Download <execution.bs> Error, copy cfg/execution.bs")
+endif ()
+
 file(STRINGS "${CMAKE_BINARY_DIR}/execution.bs" STD_EXECUTION_BS_REVISION_LINE REGEX "Revision: [0-9]+")
 string(REGEX REPLACE "Revision: ([0-9]+)" "\\1" STD_EXECUTION_BS_REVISION ${STD_EXECUTION_BS_REVISION_LINE})
 
@@ -43,15 +51,13 @@ set(CMAKE_CXX_COMPILER "clang++-15")
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
 
-set(EXEC_INCLUDE_ROOT "include/exec")
-set(STDEXEC_INCLUDE_ROOT "include/stdexec")
+set(OLD_INCLUDE_ROOT "include")
 #include_directories(${INCLUDE_ROOT})
 
-file(GLOB_RECURSE EXEC_HEADERS ${EXEC_INCLUDE_ROOT}/*.hpp)
-file(GLOB_RECURSE STDEXEC_HEADERS ${STDEXEC_INCLUDE_ROOT}/*.hpp)
+file(GLOB_RECURSE STDEXEC_OLD_HEADERS ${OLD_INCLUDE_ROOT}/*.hpp)
 
 #add_library(stdexec INTERFACE)
 #target_sources(stdexec INTERFACE ${INCLUDE_HEADERS})
 
-add_executable(main main.cc ${EXEC_HEADERS} ${STDEXEC_HEADERS})
+add_executable(main main.cc ${STDEXEC_OLD_HEADERS})
 #target_link_libraries(main stdexec)
