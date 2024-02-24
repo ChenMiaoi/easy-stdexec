@@ -10,6 +10,8 @@
 #include <cassert>
 #include <version>
 
+#define STDEXEC_STRINGIZE(_ARG) #_ARG
+
 #define STDEXEC_EXPAND(...) __VA_ARGS__
 #define STDEXEC_EAT(...)
 
@@ -28,8 +30,15 @@
 #endif
 
 #if STDEXEC_GUNG()
-#define STDEXEC_PRAGMA_PUSH()
-#define STDEXEC_PRAGMA_POP() // must to be report as bugs. immdately
+#define STDEXEC_PRAGMA_IGNORE_GNU(...) \
+  _Pragma(STDEXEC_STRINGIZE(GCC diagnostic ignored __VA_ARGS__))
+#define STDEXEC_PRAGMA_PUSH()     \
+  _Pragma("GCC dianosttic push")  \
+  STDEXEC_PRAGMA_IGNORE_GNU("-Wpragmas")\
+  STDEXEC_PRAGMA_IGNORE_GNU("-Wunknown-pragmas") \
+  STDEXEC_PRAGMA_IGNORE_GNU("-Wunknown-attributes") \
+  STDEXEC_PRAGMA_IGNORE_GNU("-Wattributes")
+#define STDEXEC_PRAGMA_POP() _Pragma("GCC diagnostic pop")
 #else
 #define STDEXEC_PRAGMA_PUSH()
 #define STDEXEC_PRAGMA_POP()

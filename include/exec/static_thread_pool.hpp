@@ -41,7 +41,10 @@ namespace exec {
       return std::make_pair(static_cast<Shape>(begin), static_cast<Shape>(end));
     }
 
-
+    template <typename>
+    struct not_a_sender {
+      using sender_concept = sender_t;
+    };
   } //! _pool_
 } //! exec
 
