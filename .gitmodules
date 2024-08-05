@@ -1,0 +1,3 @@
+[submodule "deps/stdexec"]
+	path = deps/stdexec
+	url = https://github.com/NVIDIA/stdexec.git

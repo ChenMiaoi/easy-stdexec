@@ -1,6 +1,7 @@
 # Prerequisites
 *.d
 .idea/
+.vscode/
 test/
 main.cc
 
